@@ -1,0 +1,5 @@
+ARG VERSION
+
+FROM motoserver/moto:${VERSION}
+
+ENV MOTO_PORT=3000

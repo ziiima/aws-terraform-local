@@ -1,0 +1,34 @@
+services:
+  cognito:
+    container_name: cognito_container
+    build:
+      context: .
+      dockerfile: tmp.cognito.dockerfile
+      args:
+        VERSION: "5.0.25"
+    ports:
+      - 3001:3000
+    restart: on-failure
+    networks:
+      - internal
+  terraform:
+    container_name: terraform_container
+    build:
+      context: .
+      dockerfile: tmp.terraform.dockerfile
+      target: development
+      args:
+        TERRAFORM_VERSION: "1.10.3"
+        AWS_CLI_VERSION: "2.22.27"
+    tty: true
+    environment:
+      AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: AWS_SECRET_ACCESS_KEY
+      AWS_DEFAULT_REGION: ap-northeast-1
+    volumes:
+      - ../terraform:/usr/terraform
+    networks:
+      - internal
+
+networks:
+  internal: {}
