@@ -11,6 +11,36 @@ services:
     restart: on-failure
     networks:
       - internal
+  api:
+    container_name: api_container
+    build:
+      context: ../app/api
+      dockerfile: tmp.node.dockerfile
+      target: development
+      args:
+        NODE_VERSION: "22-alpine"
+    tty: true
+    networks:
+      - internal
+    ports:
+      - 3000:3000
+    volumes:
+      - ../app/api:/usr/app
+  frontend:
+    container_name: ui_container
+    build:
+      context: ../app/web-ui
+      dockerfile: tmp.node.dockerfile
+      target: development
+      args:
+        NODE_VERSION: "22-alpine"
+    tty: true
+    networks:
+      - internal
+    ports:
+      - 4200:4200
+    volumes:
+      - ../app/web-ui:/usr/app
   terraform:
     container_name: terraform_container
     build:
